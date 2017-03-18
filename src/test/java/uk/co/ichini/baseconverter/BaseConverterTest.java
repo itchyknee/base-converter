@@ -107,7 +107,7 @@ public class BaseConverterTest {
 	}
 	
 	private void checkDecoding(String encoded, long expected) {
-		assertEquals(expected, converter.decode(encoded));
+		assertEquals(expected, converter.decode(encoded).longValue());
 	}
 
 	private void checkEncoding(Number n, String expected) {

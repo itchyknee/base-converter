@@ -1,5 +1,6 @@
 package uk.co.ichini.baseconverter;
 
+import java.math.BigInteger;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
@@ -22,7 +23,7 @@ public class BaseConverter {
 	private static BaseConverter sBase62;
 	
 	private static final int ZERO = 0;
-	private int base;
+	private BigInteger base;
 	private char[] encoding;
 	private Map<Character, Integer> encodingTable;
 	
@@ -61,29 +62,31 @@ public class BaseConverter {
 					+ ". Use constructor with encoding String instead.");
 		}
 		this.encoding = ENCODING_KNOWN.substring(0, base).toCharArray();
-		this.base = base;
+		this.base = BigInteger.valueOf(base);
 	}
 	public BaseConverter(String encoding) {
 		this.encoding = encoding.toCharArray();
 		encodingTable = createTable(this.encoding);
-		base = this.encoding.length;
+		base = BigInteger.valueOf(this.encoding.length);
 	}
 
 	public String encode(Number number) {
-		String result = null;
+		BigInteger input;
 		if (isLongCompatible(number)) {
-			result = encode(toLong(number));
+			input = BigInteger.valueOf(number.longValue());
+		} else if (BigInteger.class.isAssignableFrom(number.getClass())) {
+			input = (BigInteger)number;
 		} else {
 			throw new IllegalArgumentException("Only integral numbers supported.");
 		}
-		return result;
+		return encode(input);
 	}
 
 	public Number decode(String number) {
-		long n = 0;
+		BigInteger n = BigInteger.ZERO;
 		Integer[] working = decodeToBase(number);
 		for (Integer digit : working) {
-			n = base * n + digit;
+			n = base.multiply(n).add(BigInteger.valueOf(digit));
 		}
 		return n;
 	}
@@ -103,7 +106,7 @@ public class BaseConverter {
 		return working;
 	}
 
-	private String encode(long number) {
+	private String encode(BigInteger number) {
 		Integer[] working = encodeToBase(number);
 		return encodeFromBase(working);
 	}
@@ -117,22 +120,18 @@ public class BaseConverter {
 	    return result.toString();
 	}
 
-	private Integer[] encodeToBase(long number) {
+	private Integer[] encodeToBase(BigInteger number) {
 		Deque<Integer> working = new ArrayDeque<Integer>();
-		if (number > 0) {
-			long n = number;
-		    while (n > 0) {
-		        working.push((int)n % base);
-		        n  = n / base;
+		if (!number.equals(BigInteger.ZERO)) {
+			BigInteger n = number;
+		    while (!n.equals(BigInteger.ZERO)) {
+		        working.push(n.mod(base).intValue());
+		        n  = n.divide(base);
 		    }
 		} else {
 			working.add(ZERO);
 		}
 		return working.toArray(new Integer[working.size()]);
-	}
-
-	private long toLong(Number number) {
-		return number.longValue();
 	}
 
 	private boolean isLongCompatible(Number number) {
@@ -155,7 +154,6 @@ public class BaseConverter {
 			}
 			result.put(c, i);
 		}
-		System.out.println(result);
 		return result;
 	}
 
