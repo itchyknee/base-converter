@@ -8,11 +8,61 @@ import java.util.Map;
 
 public class BaseConverter {
 
+	private static final String ENCODING_0_9 =       "0123456789";
+	private static final String ENCODING_A_F =       "ABCDEF";
+	private static final String ENCODING_A_Z =       "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private static final String ENCODING_A_Z_LOWER = "abcdefghijklmnopqrstuvwxyz";
+	private static final String ENCODING_URL_SAFE = "-_~.";
+	private static final String ENCODING_KNOWN = ENCODING_0_9
+			+ ENCODING_A_Z + ENCODING_A_Z_LOWER + ENCODING_URL_SAFE;
+	
+	private static BaseConverter sBase10;
+	private static BaseConverter sBase16;
+	private static BaseConverter sBase36;
+	private static BaseConverter sBase62;
+	
 	private static final int ZERO = 0;
 	private int base;
 	private char[] encoding;
 	private Map<Character, Integer> encodingTable;
 	
+	public static BaseConverter base10() {
+		if (sBase10 == null) {
+			sBase10 = new BaseConverter(ENCODING_0_9);
+		}
+		return sBase10;
+	}
+	
+	public static BaseConverter base16() {
+		if (sBase16 == null) {
+			sBase16 = new BaseConverter(ENCODING_0_9 + ENCODING_A_F);
+		}
+		return sBase16;
+	}
+	
+	public static BaseConverter base36() {
+		if (sBase36 == null) {
+			sBase36 = new BaseConverter(ENCODING_0_9 + ENCODING_A_Z);
+		}
+		return sBase36;
+	}
+	
+	public static BaseConverter base62() {
+		if (sBase62 == null) {
+			sBase62 = new BaseConverter(ENCODING_0_9 + ENCODING_A_Z + ENCODING_A_Z_LOWER);
+		}
+		return sBase62;
+	}
+	
+	public BaseConverter(int base) {
+		if (base > ENCODING_KNOWN.length()) {
+			throw new IllegalArgumentException("Maximum base for standard mapping limited to " 
+					+ ENCODING_KNOWN.length()
+					+ ". Use constructor with encoding String instead.");
+		}
+		this.encoding = ENCODING_KNOWN.substring(0, base).toCharArray();
+		this.base = base;
+	}
 	public BaseConverter(String encoding) {
 		this.encoding = encoding.toCharArray();
 		encodingTable = createTable(this.encoding);
@@ -30,11 +80,6 @@ public class BaseConverter {
 	}
 
 	public Number decode(String number) {
-//		    """Compute the number given by digits in base b."""
-//		    n = 0
-//		    for d in digits:
-//		        n = b * n + d
-//		    return n
 		long n = 0;
 		Integer[] working = decodeToBase(number);
 		for (Integer digit : working) {
@@ -110,6 +155,7 @@ public class BaseConverter {
 			}
 			result.put(c, i);
 		}
+		System.out.println(result);
 		return result;
 	}
 
