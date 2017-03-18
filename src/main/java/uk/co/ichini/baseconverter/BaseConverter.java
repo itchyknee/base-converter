@@ -8,13 +8,13 @@ import java.util.Map;
 
 public class BaseConverter {
 
-	private static final String ENCODING_0_9 =       "0123456789";
-	private static final String ENCODING_A_F =       "ABCDEF";
-	private static final String ENCODING_A_Z =       "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	private static final String ENCODING_A_Z_LOWER = "abcdefghijklmnopqrstuvwxyz";
-	private static final String ENCODING_URL_SAFE = "-_~.";
-	private static final String ENCODING_KNOWN = ENCODING_0_9
-			+ ENCODING_A_Z + ENCODING_A_Z_LOWER + ENCODING_URL_SAFE;
+	public static final String ENCODING_0_9 =       "0123456789";
+	public static final String ENCODING_A_F =       "ABCDEF";
+	public static final String ENCODING_A_Z =       "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	public static final String ENCODING_A_Z_LOWER = "abcdefghijklmnopqrstuvwxyz";
+	public static final String ENCODING_URL_SAFE =  "-._~";
+	public static final String ENCODING_KNOWN = 
+			ENCODING_0_9 + ENCODING_A_Z + ENCODING_A_Z_LOWER + ENCODING_URL_SAFE;
 	
 	private static BaseConverter sBase10;
 	private static BaseConverter sBase16;
