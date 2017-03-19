@@ -2,6 +2,7 @@ language: java
 
 addons:
   sonarqube:
+    organization: "itchyknee-github"
     token:
       secure: $SONAR_TOKEN
 
