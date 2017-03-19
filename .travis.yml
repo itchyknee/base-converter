@@ -1,8 +1,11 @@
----
 language: java
 addons:
   sonarqube:
     token:
-      secure: $SONAR_TOKEN
+      secure: H+0w8804Eymurne9NYhmsej/h+muac0MjFscOey+bBpQL0CmMbWkBYbap7ztrdTviwIb5GE4MLF1KdVTmGsdAFH6Hq30wcHgdfZ/im9ZI67lYKwX8ZX/mt9aiVjjfahVHPyYtp5Pl01cr5E/pnSeMnr+3L5L6vdMQxMwtVmMkfTBgAoI6Rduv9su/7PNDA1xV/OrEsPyCBHjXgk0q7kfv8gk1rujhDjwGzIt+4aUcIBv5S4gzAgp677MWaZgyrPZW1aPEF3yF5cTGm6ISwdV/nVVyUMmV2LmHpWB5EgLoVVNoK6SNazWuQRGAYkTtTDoVrZRR9rVHBFSVIbufwttMnqZxgQVUwPbbTQ9bb5akU6hcwOruGoS7P4ANLLmR5Sk+II2LfchQtGYdl2FnOm/MrRw61mSLoUREuH70vQLlCob6y1LF+BztQg3RaVBwe+3ZE9rw6BfQY0OP2ZnDXV+js1SMbE4jWBS3qV3blkf+d4k5nvW3kte3Amg5Wa3smXtKlMn4K2O3XvyA7jQ0ziZt5ZFQuar4nxWNafN0t6y9cdcb83Q7w78EtfFaJ/dewDu7qT1HfGoGDM6W87yXt/KjGVYrLzGjnO+LYBWQaomJt8k4zee162djltqHOtTZM98RwdF9IXt1c7dITRssO0LRj+DxJdkXxKUcuxzrhPBsGU=
 script:
-  - mvn clean install sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL
+- mvn clean install sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL
+cache:
+  directories:
+  - "$HOME/.m2/repository"
+  - "$HOME/.sonar/cache"
