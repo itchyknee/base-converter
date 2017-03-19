@@ -10,8 +10,7 @@ jdk:
   - oraclejdk8
   
 script:
-- sonar-scanner -X
-# - mvn clean install sonar:sonar -Dsonar.host.url=$SONAR_HOST_URL
+ - mvn clean install sonar:sonar
 
 cache:
   directories:
