@@ -16,7 +16,6 @@
 		<!-- maven plugins -->
 		<maven-source-plugin.version>3.0.1</maven-source-plugin.version>
 		<jacoco-maven-plugin.version>0.7.6.201602180812</jacoco-maven-plugin.version>
-		<sonar-maven-plugin.version>2.7.1</sonar-maven-plugin.version>
 
 	</properties>
 
@@ -56,11 +55,6 @@
 				</plugin>
 
 				<!-- code quality -->
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>sonar-maven-plugin</artifactId>
-					<version>${sonar-maven-plugin.version}</version>
-				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>
 					<artifactId>jacoco-maven-plugin</artifactId>
