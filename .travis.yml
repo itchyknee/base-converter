@@ -10,7 +10,7 @@ jdk:
   - oraclejdk8
   
 script:
- - mvn clean install sonar:sonar
+ - mvn clean install sonar:sonar -Dsonar.jacoco.reportPath=target/jacoco.exec
 
 cache:
   directories:
