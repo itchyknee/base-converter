@@ -63,13 +63,18 @@ public class BaseConverter {
 		}
 		this.encoding = ENCODING_KNOWN.substring(0, base).toCharArray();
 		this.base = BigInteger.valueOf(base);
+		this.encodingTable = createTable(this.encoding);
 	}
 	public BaseConverter(String encoding) {
 		this.encoding = encoding.toCharArray();
-		encodingTable = createTable(this.encoding);
-		base = BigInteger.valueOf(this.encoding.length);
+		this.base = BigInteger.valueOf(this.encoding.length);
+		this.encodingTable = createTable(this.encoding);
 	}
 
+	public String encode(byte[] bytes) {
+		return encode(toBigInteger(bytes));
+	}
+	
 	public String encode(Number number) {
 		BigInteger input;
 		if (isLongCompatible(number)) {
@@ -82,13 +87,29 @@ public class BaseConverter {
 		return encode(input);
 	}
 
-	public Number decode(String number) {
+	public byte[] decodeBytes(String number) {
+		BigInteger n = BigInteger.ZERO;
+		Integer[] working = decodeToBase(number);
+		for (Integer digit : working) {
+			n = base.multiply(n).add(BigInteger.valueOf(digit));
+		}
+		return n.toByteArray();
+	}
+
+	public Number decodeNumber(String number) {
 		BigInteger n = BigInteger.ZERO;
 		Integer[] working = decodeToBase(number);
 		for (Integer digit : working) {
 			n = base.multiply(n).add(BigInteger.valueOf(digit));
 		}
 		return n;
+	}
+
+	private BigInteger toBigInteger(byte[] bytes) {
+		byte[] numberBytes = new byte[bytes.length + 1];
+		System.arraycopy(bytes, 0, numberBytes, 1, bytes.length);
+		BigInteger result = new BigInteger(numberBytes);
+		return result;
 	}
 
 	private Integer[] decodeToBase(String number) {
