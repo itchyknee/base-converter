@@ -1,2 +1,8 @@
 ---
 language: java
+addons:
+  sonarqube:
+    token:
+      secure: $SONAR_TOKEN
+script:
+  - mvn clean install sonar:sonar
