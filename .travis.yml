@@ -3,6 +3,8 @@ language: java
 addons:
   sonarqube:
     organization: "sonarsource"
+    token:
+      secure: $SONAR_TOKEN
 
 jdk:
   - oraclejdk8
