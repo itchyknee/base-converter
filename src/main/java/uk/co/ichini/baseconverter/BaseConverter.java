@@ -9,59 +9,60 @@ import java.util.Map;
 
 public class BaseConverter {
 
-	public static final String ENCODING_0_9 =       "0123456789";
-	public static final String ENCODING_A_F =       "ABCDEF";
-	public static final String ENCODING_A_Z =       "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	public static final String ENCODING_A_Z_LOWER = "abcdefghijklmnopqrstuvwxyz";
-	public static final String ENCODING_URL_SAFE =  "-._~";
-	public static final String ENCODING_KNOWN = 
-			ENCODING_0_9 + ENCODING_A_Z + ENCODING_A_Z_LOWER + ENCODING_URL_SAFE;
+	/**
+	 * Default encoding for bases 10, 16, 36, 62, 66.
+	 */
+	public static final String DEFAULT_ENCODING = "0123456789"
+			+ "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+			+ "abcdefghijklmnopqrstuvwxyz"
+			+ "-._~";
+	
+	private static final int ZERO = 0;
 	
 	private static BaseConverter sBase10;
 	private static BaseConverter sBase16;
 	private static BaseConverter sBase36;
 	private static BaseConverter sBase62;
 	
-	private static final int ZERO = 0;
 	private BigInteger base;
 	private char[] encoding;
 	private Map<Character, Integer> encodingTable;
 	
 	public static BaseConverter base10() {
 		if (sBase10 == null) {
-			sBase10 = new BaseConverter(ENCODING_0_9);
+			sBase10 = new BaseConverter(10);
 		}
 		return sBase10;
 	}
 	
 	public static BaseConverter base16() {
 		if (sBase16 == null) {
-			sBase16 = new BaseConverter(ENCODING_0_9 + ENCODING_A_F);
+			sBase16 = new BaseConverter(16);
 		}
 		return sBase16;
 	}
 	
 	public static BaseConverter base36() {
 		if (sBase36 == null) {
-			sBase36 = new BaseConverter(ENCODING_0_9 + ENCODING_A_Z);
+			sBase36 = new BaseConverter(36);
 		}
 		return sBase36;
 	}
 	
 	public static BaseConverter base62() {
 		if (sBase62 == null) {
-			sBase62 = new BaseConverter(ENCODING_0_9 + ENCODING_A_Z + ENCODING_A_Z_LOWER);
+			sBase62 = new BaseConverter(62);
 		}
 		return sBase62;
 	}
 	
 	public BaseConverter(int base) {
-		if (base > ENCODING_KNOWN.length()) {
+		if (base > DEFAULT_ENCODING.length()) {
 			throw new IllegalArgumentException("Maximum base for standard mapping limited to " 
-					+ ENCODING_KNOWN.length()
+					+ DEFAULT_ENCODING.length()
 					+ ". Use constructor with encoding String instead.");
 		}
-		this.encoding = ENCODING_KNOWN.substring(0, base).toCharArray();
+		this.encoding = DEFAULT_ENCODING.substring(0, base).toCharArray();
 		this.base = BigInteger.valueOf(base);
 		this.encodingTable = createTable(this.encoding);
 	}
@@ -77,10 +78,10 @@ public class BaseConverter {
 	
 	public String encode(Number number) {
 		BigInteger input;
-		if (isLongCompatible(number)) {
-			input = BigInteger.valueOf(number.longValue());
-		} else if (BigInteger.class.isAssignableFrom(number.getClass())) {
+		if (BigInteger.class.isAssignableFrom(number.getClass())) {
 			input = (BigInteger)number;
+		} else if (isLongCompatible(number)) {
+			input = BigInteger.valueOf(number.longValue());
 		} else {
 			throw new IllegalArgumentException("Only integral numbers supported.");
 		}

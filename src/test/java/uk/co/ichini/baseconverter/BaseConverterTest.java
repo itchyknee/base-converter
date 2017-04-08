@@ -105,14 +105,59 @@ public class BaseConverterTest {
 		checkEncoding(62, "10");
 	}
 
+	@Test
+	public void testLongEncoding_baseN() {
+		converter = new BaseConverter(62);
+		checkEncoding(0L,  "0");
+		checkEncoding(1L,  "1");
+		checkEncoding(61L,  "z");
+		checkEncoding(62L, "10");
+	}
+
+	@Test
+	public void testShortEncoding_baseN() {
+		converter = new BaseConverter(62);
+		checkEncoding((short)0,  "0");
+		checkEncoding((short)1,  "1");
+		checkEncoding((short)61,  "z");
+		checkEncoding((short)62, "10");
+	}
+	
+	@Test
+	public void testIntegerDecoding_baseN() {
+		converter = new BaseConverter(62);
+		checkDecoding("0", 0);
+		checkDecoding("1", 1);
+		checkDecoding("z", 61);
+		checkDecoding("10", 62);
+	}
+
+	@Test
+	public void testLongDecoding_baseN() {
+		converter = new BaseConverter(62);
+		checkDecoding("0", new Long(0));
+		checkDecoding("1", new Long(1));
+		checkDecoding("z", new Long(61));
+		checkDecoding("10", new Long(62));
+	}
+
+	@Test
+	public void testShortDecoding_baseN() {
+		converter = new BaseConverter(62);
+		checkDecoding("0", new Short((short)0));
+		checkDecoding("1", new Short((short)1));
+		checkDecoding("z", new Short((short)61));
+		checkDecoding("10", new Short((short)62));
+	}
+	
 	@Test(expected=IllegalArgumentException.class)
 	public void testIntegerEncoding_baseN_exceedsKnown() {
 		new BaseConverter(70);
 	}
 	
 	private void checkDecoding(String encoded, long expected) {
-		Number actual = converter.decodeNumber(encoded).longValue();
-		assertEquals(expected, actual);
+		Number actual = converter.decodeNumber(encoded);
+		assertEquals(expected, actual.longValue());
 		assertEquals(encoded, converter.encode(actual));
 	}
 
